@@ -6,7 +6,6 @@ public class PlaneHelper : MonoBehaviour {
 	public Material SelectedMaterial;
 	public Material DefaultMaterial;
 	public Material HighlightedMaterial;
-	public bool Hello;
 
 	public static PlaneHelper planeHelper;
 
@@ -22,29 +21,30 @@ public class PlaneHelper : MonoBehaviour {
 		Grid.PreviousSelection.Clear ();
 	}
 
-	public static void ShowPossibleMoves(int currentX, int currentZ)
-	{
-		for (int i = -2; i <= 2; i++) {
-			for (int j = -2; j <= 2; j++) {
-				var x = currentX + i;
-				var z = currentZ + j;
-				if (x >= 0 && z >= 0 && x <= 9 && z <= 9) {
-
-					if ( (i == 2 && j != 0) || 
-					     (i == -2 && j != 0) || 
-					     (j == 2 && i != 0) || 
-					     (j == -2 && i != 0) )
-					{
-						continue;
-					}
-
-					Grid.MyGrid[x, z].renderer.sharedMaterial = planeHelper.HighlightedMaterial;
-					var pt = new MyPoint(x,z);
-					Grid.PreviousSelection.Add(pt);
-				}
-			}
+	public static void ShowPossibleMoves(int x, int z, int dim) {
+		if (dim < 0) {
+			return;
 		}
-		Grid.MyGrid [currentX, currentZ].renderer.sharedMaterial = planeHelper.SelectedMaterial; // surround algo shouldn't even highlight this spot
+
+		if (Grid.MyGrid [x, z].renderer.sharedMaterial != planeHelper.HighlightedMaterial) {
+			Grid.MyGrid [x, z].renderer.sharedMaterial = planeHelper.HighlightedMaterial;
+		}
+		var pt = new MyPoint(x,z);
+		Grid.PreviousSelection.Add(pt);
+		dim--;
+
+		if (x+1 < Grid.Width) {
+			ShowPossibleMoves(x+1,z,dim);
+		}
+		if (x-1 >= 0) {
+			ShowPossibleMoves(x-1,z,dim);
+		}
+		if (z+1 < Grid.Height) {
+			ShowPossibleMoves(x,z+1,dim);
+		}
+		if (z-1 >= 0) {
+			ShowPossibleMoves(x,z-1,dim);
+		}
 	}
 
 	void OnMouseDown()
