@@ -29,4 +29,31 @@ public class Grid : MonoBehaviour {
 		staticPlayer.renderer.material.color = Color.black;
 		staticPlayer.AddComponent ("Player");
 	}
+
+	void OnGUI()
+	{
+		GUI.Label (new Rect (110, 20, 100, 20), new GUIContent ("Max moves: " + Player.GetMaxMoves ()));
+		if(GUI.Button(new Rect(100,40,100,50), new GUIContent("-")) && Player.GetMaxMoves() > 1)
+	    {
+			Player.SetMaxMoves(Player.GetMaxMoves()-1);
+
+			if (Grid.PreviousSelection.Count > 0)
+			{
+				var playerPosition = Player.player.transform.position;
+				PlaneHelper.ClearPreviousSelection();
+				PlaneHelper.ShowPossibleMoves((int)playerPosition.x, (int)playerPosition.z, Player.GetMaxMoves());
+			}
+		}
+		if(GUI.Button(new Rect(100,90,100,50), new GUIContent("+")) && Player.GetMaxMoves() < Mathf.Min(Grid.Width, Grid.Height))
+		{
+			Player.SetMaxMoves(Player.GetMaxMoves()+1);
+
+			if (Grid.PreviousSelection.Count > 0)
+			{
+				var playerPosition = Player.player.transform.position;
+				PlaneHelper.ClearPreviousSelection();
+				PlaneHelper.ShowPossibleMoves((int)playerPosition.x, (int)playerPosition.z, Player.GetMaxMoves());
+			}
+		}
+	}
 }
