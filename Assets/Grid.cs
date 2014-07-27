@@ -1,12 +1,13 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class Grid : MonoBehaviour {
 	public GameObject plane;
 	public static int Width = 10;
 	public static int Height = 10;
 
-	public static IList PreviousSelection = new ArrayList();
+	public static List<GameObject> HighlightedTiles = new List<GameObject>();
 	public static GameObject[,] MyGrid = new GameObject[10, 10];
 	public static GameObject staticPlayer;
 	public static GameObject enemyPlayer;
@@ -57,7 +58,7 @@ public class Grid : MonoBehaviour {
 	    {
 			Player.SetMaxMoves(Player.GetMaxMoves()-1);
 
-			if (Grid.PreviousSelection.Count > 0)
+			if (Grid.HighlightedTiles.Count > 0)
 			{
 				var playerPosition = Player.player.transform.position;
 				PlaneHelper.ClearPreviousSelection();
@@ -69,7 +70,7 @@ public class Grid : MonoBehaviour {
 		{
 			Player.SetMaxMoves(Player.GetMaxMoves()+1);
 
-			if (Grid.PreviousSelection.Count > 0)
+			if (Grid.HighlightedTiles.Count > 0)
 			{
 				var playerPosition = Player.player.transform.position;
 				PlaneHelper.ClearPreviousSelection();

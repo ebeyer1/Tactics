@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 public class PlaneHelper : MonoBehaviour {
 	public Material DefaultMaterial;
@@ -14,18 +16,10 @@ public class PlaneHelper : MonoBehaviour {
 	}
 
 	public static void ClearPreviousSelection() {
-		foreach (var pt in Grid.PreviousSelection) {
-			var point = (MyPoint)pt;
-
-			var scrpt = (PlaneHelper)Grid.MyGrid [point.X, point.Z].GetComponent ("PlaneHelper");
-			if (scrpt.isRockyTerrain) {
-				Grid.MyGrid[point.X, point.Z].renderer.sharedMaterial = planeHelper.RockyTerrainMaterial;
-			}
-			else {
-				Grid.MyGrid[point.X, point.Z].renderer.sharedMaterial = planeHelper.DefaultMaterial;
-			}
+		foreach (var pt in Grid.HighlightedTiles) {
+			Destroy(pt);
 		}
-		Grid.PreviousSelection.Clear ();
+		Grid.HighlightedTiles.Clear ();
 	}
 
 	public static void ShowPossibleMoves(int x, int z, int dim) {
@@ -39,11 +33,15 @@ public class PlaneHelper : MonoBehaviour {
 			return;
 		}
 
-		if (Grid.MyGrid [x, z].renderer.sharedMaterial != planeHelper.HighlightedMaterial) {
-			Grid.MyGrid [x, z].renderer.sharedMaterial = planeHelper.HighlightedMaterial;
+		if (!Grid.HighlightedTiles.Any (p => p.transform.position.x == x & p.transform.position.z == z)) {
+			GameObject p = GameObject.CreatePrimitive (PrimitiveType.Plane);
+			p.transform.position = new Vector3 (x, .01f, z);
+			p.renderer.material = PlaneHelper.planeHelper.HighlightedMaterial;
+			p.renderer.transform.localScale = new Vector3 (.1f, .1f, .1f);
+			p.AddComponent("HighlightedTileHelper");
+
+			Grid.HighlightedTiles.Add(p);
 		}
-		var pt = new MyPoint(x,z);
-		Grid.PreviousSelection.Add(pt);
 
 		if (scrpt.isRockyTerrain) {
 			dim--;
@@ -61,37 +59,6 @@ public class PlaneHelper : MonoBehaviour {
 		}
 		if (z-1 >= 0) {
 			ShowPossibleMoves(x,z-1,dim);
-		}
-	}
-
-	void OnMouseDown()
-	{
-		var currentX = (int)gameObject.transform.position.x;
-		var currentZ = (int)gameObject.transform.position.z;
-		if (Grid.MyGrid [currentX, currentZ].renderer.sharedMaterial == HighlightedMaterial) {
-			Grid.staticPlayer.transform.position = new Vector3(currentX,Grid.staticPlayer.transform.position.y, currentZ);
-			ClearPreviousSelection();
-		}
-	}
-}
-
-public class MyPoint {
-	private int x;
-	private int z;
-	public MyPoint(int x, int z){
-		this.x = x;
-		this.z = z;
-	}
-
-	public int X {
-		get {
-			return this.x;
-		}
-	}
-
-	public int Z {
-		get {
-			return this.z;
 		}
 	}
 }
