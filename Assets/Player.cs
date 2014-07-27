@@ -6,6 +6,19 @@ public class Player : MonoBehaviour {
 	private static int _maxMoves = 2;
 	public static Player player;
 
+	void Awake()
+	{
+		player = this;
+	}
+
+	private static void MoveToCoord(float x, float y, float z) {
+		Grid.staticPlayer.transform.position = new Vector3(x,y,z);
+	}
+
+	public static void MoveToCoord(float x, float z) {
+		MoveToCoord (x, Grid.staticPlayer.transform.position.y, z);
+	}
+
 	public static void SetMaxMoves(int max)
 	{
 		_maxMoves = max;
@@ -14,11 +27,6 @@ public class Player : MonoBehaviour {
 	public static int GetMaxMoves()
 	{
 		return _maxMoves;
-	}
-
-	void Awake()
-	{
-		player = this;
 	}
 
 	void OnMouseDown() {

@@ -4,9 +4,11 @@ using System.Collections;
 public class HighlightedTileHelper : MonoBehaviour {
 
 	void OnMouseDown() {
-		var currentX = (int)gameObject.transform.position.x;
-		var currentZ = (int)gameObject.transform.position.z;
-		Grid.staticPlayer.transform.position = new Vector3(currentX,Grid.staticPlayer.transform.position.y, currentZ);
+		var clickedX = (int)gameObject.transform.position.x;
+		var clickedZ = (int)gameObject.transform.position.z;
+
+		Player.MoveToCoord (clickedX, clickedZ);
+
 		PlaneHelper.ClearPreviousSelection();
 	}
 }

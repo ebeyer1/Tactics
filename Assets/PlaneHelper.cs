@@ -16,16 +16,14 @@ public class PlaneHelper : MonoBehaviour {
 	}
 
 	public static void ClearPreviousSelection() {
-		foreach (var pt in Grid.HighlightedTiles) {
-			Destroy(pt);
-		}
+		Grid.HighlightedTiles.ForEach (t => Destroy (t));
 		Grid.HighlightedTiles.Clear ();
 	}
 
 	public static void ShowPossibleMoves(int x, int z, int dim) {
 		int required = 0;
 		var scrpt = (PlaneHelper)Grid.MyGrid [x, z].GetComponent ("PlaneHelper");
-		if (scrpt.isRockyTerrain) {
+		if (scrpt.isRockyTerrain && dim != Player.GetMaxMoves()) {
 			required = 1;
 		}
 
@@ -43,7 +41,7 @@ public class PlaneHelper : MonoBehaviour {
 			Grid.HighlightedTiles.Add(p);
 		}
 
-		if (scrpt.isRockyTerrain) {
+		if (scrpt.isRockyTerrain && dim != Player.GetMaxMoves()) {
 			dim--;
 		}
 		dim--;
