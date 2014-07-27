@@ -2,8 +2,6 @@
 using System.Collections;
 
 public class PlaneHelper : MonoBehaviour {
-	
-	public Material SelectedMaterial;
 	public Material DefaultMaterial;
 	public Material HighlightedMaterial;
 	public Material RockyTerrainMaterial;
