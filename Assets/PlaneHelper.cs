@@ -2,10 +2,12 @@
 using System.Collections;
 
 public class PlaneHelper : MonoBehaviour {
-
+	
 	public Material SelectedMaterial;
 	public Material DefaultMaterial;
 	public Material HighlightedMaterial;
+	public Material RockyTerrainMaterial;
+	public bool isRockyTerrain;
 
 	public static PlaneHelper planeHelper;
 
@@ -16,13 +18,26 @@ public class PlaneHelper : MonoBehaviour {
 	public static void ClearPreviousSelection() {
 		foreach (var pt in Grid.PreviousSelection) {
 			var point = (MyPoint)pt;
-			Grid.MyGrid[point.X, point.Z].renderer.sharedMaterial = planeHelper.DefaultMaterial;
+
+			var scrpt = (PlaneHelper)Grid.MyGrid [point.X, point.Z].GetComponent ("PlaneHelper");
+			if (scrpt.isRockyTerrain) {
+				Grid.MyGrid[point.X, point.Z].renderer.sharedMaterial = planeHelper.RockyTerrainMaterial;
+			}
+			else {
+				Grid.MyGrid[point.X, point.Z].renderer.sharedMaterial = planeHelper.DefaultMaterial;
+			}
 		}
 		Grid.PreviousSelection.Clear ();
 	}
 
 	public static void ShowPossibleMoves(int x, int z, int dim) {
-		if (dim < 0) {
+		int required = 0;
+		var scrpt = (PlaneHelper)Grid.MyGrid [x, z].GetComponent ("PlaneHelper");
+		if (scrpt.isRockyTerrain) {
+			required = 1;
+		}
+
+		if (dim < required) {
 			return;
 		}
 
@@ -31,6 +46,10 @@ public class PlaneHelper : MonoBehaviour {
 		}
 		var pt = new MyPoint(x,z);
 		Grid.PreviousSelection.Add(pt);
+
+		if (scrpt.isRockyTerrain) {
+			dim--;
+		}
 		dim--;
 
 		if (x+1 < Grid.Width) {
