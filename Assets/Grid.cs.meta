@@ -2,7 +2,9 @@ fileFormatVersion: 2
 guid: f360631ce3b2c49cfb7d113758367366
 MonoImporter:
   serializedVersion: 2
-  defaultReferences: []
+  defaultReferences:
+  - plane: {instanceID: 0}
+  - playa: {fileID: 100004, guid: 6e6ce85311d3b46e5a2bb708d69bf150, type: 3}
   executionOrder: 0
   icon: {instanceID: 0}
   userData: 

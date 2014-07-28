@@ -46,10 +46,9 @@ public class Grid : MonoBehaviour {
 		myScript.isRockyTerrain = true;
 
 		// me
-		staticPlayer = GameObject.CreatePrimitive(PrimitiveType.Cube);
-
-		staticPlayer.transform.position = new Vector3 (3, 0, 3);
-		staticPlayer.renderer.material.color = Color.black;
+		Object prefab = Resources.Load("space-wizard");
+		staticPlayer = (GameObject) Instantiate(prefab, new Vector3(3, 0, 3), Quaternion.identity);
+		staticPlayer.AddComponent<BoxCollider> ();
 		staticPlayer.AddComponent ("Player");
 
 		// enemy
