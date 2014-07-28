@@ -11,11 +11,13 @@ public class Player : MonoBehaviour {
 		player = this;
 	}
 
-	private static void MoveToCoord(float x, float y, float z) {
-		Grid.staticPlayer.transform.position = new Vector3(x,y,z);
+	private void MoveToCoord(float x, float y, float z) {
+		var time = (Mathf.Abs (Grid.staticPlayer.transform.position.z - z) + Mathf.Abs (Grid.staticPlayer.transform.position.x - x)) * .5f;
+
+		StartCoroutine (Grid.MoveObj (Grid.staticPlayer, new Vector3 (x, y, z), time));
 	}
 
-	public static void MoveToCoord(float x, float z) {
+	public void MoveToCoord(float x, float z) {
 		MoveToCoord (x, Grid.staticPlayer.transform.position.y, z);
 	}
 

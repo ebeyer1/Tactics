@@ -11,6 +11,8 @@ public class Grid : MonoBehaviour {
 	public static GameObject[,] MyGrid = new GameObject[10, 10];
 	public static GameObject staticPlayer;
 	public static GameObject enemyPlayer;
+
+	private static bool compCanPlay = true;
 	
 	void Awake() {
 		for (int x = 0; x < Width; x++) {
@@ -90,28 +92,45 @@ public class Grid : MonoBehaviour {
 	}
 
 	void Update() {
-		if (Grid.enemyPlayer.activeSelf && !TurnController.IsPlayersTurn ()) {
+		if (Grid.enemyPlayer.activeSelf && !TurnController.IsPlayersTurn () && compCanPlay) {
+			compCanPlay = false;
 			// Move enemy towards player. Can move one space.
 			var enemyPos = enemyPlayer.transform.position;
 			var playerPos = staticPlayer.transform.position;
+			Vector3 target;
 			if (Mathf.Abs(enemyPos.x - playerPos.x) >= Mathf.Abs(enemyPos.z - playerPos.z)) { // move x
 				if (enemyPos.x > playerPos.x) { // move left
-					enemyPlayer.transform.position = new Vector3(enemyPos.x - 1, enemyPos.y, enemyPos.z);
+					target = new Vector3(enemyPos.x - 1, enemyPos.y, enemyPos.z);
 				}
 				else { // move right
-					enemyPlayer.transform.position = new Vector3(enemyPos.x + 1, enemyPos.y, enemyPos.z);
+					target = new Vector3(enemyPos.x + 1, enemyPos.y, enemyPos.z);
 				}
 			}
 			else { // move y
 				if (enemyPos.z > playerPos.z) { // move down
-					enemyPlayer.transform.position = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z - 1);
+					target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z - 1);
 				}
 				else { // move up
-					enemyPlayer.transform.position = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z + 1);
+					target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z + 1);
 				}
 			}
 
-			TurnController.ChangeTurn();
+			StartCoroutine(MoveObj(enemyPlayer, target, 1.0f));
 		}
+	}
+
+	public static IEnumerator MoveObj(GameObject gameObj, Vector3 target, float time) {
+		var startPos = gameObj.transform.position;
+
+		var i = 0.0f;
+		var rate = 1.0f/time;
+		while (i < 1.0) {
+			i += (float)(Time.deltaTime * rate);
+			gameObj.transform.position = Vector3.Lerp(startPos, target, i);
+			yield return null;
+		}
+		
+		compCanPlay = true;
+		TurnController.ChangeTurn ();
 	}
 }

@@ -7,9 +7,7 @@ public class HighlightedTileHelper : MonoBehaviour {
 		var clickedX = (int)gameObject.transform.position.x;
 		var clickedZ = (int)gameObject.transform.position.z;
 
-		Player.MoveToCoord (clickedX, clickedZ);
-
-		TurnController.ChangeTurn ();
+		Player.player.MoveToCoord (clickedX, clickedZ);
 
 		PlaneHelper.ClearPreviousSelection();
 	}
