@@ -6,6 +6,7 @@ using System.Linq;
 public class PlaneHelper : MonoBehaviour {
 	public Material DefaultMaterial;
 	public Material HighlightedMaterial;
+	public Material EnemyHighlightedMaterial;
 	public Material RockyTerrainMaterial;
 	public bool isRockyTerrain;
 
@@ -34,9 +35,14 @@ public class PlaneHelper : MonoBehaviour {
 		if (!Grid.HighlightedTiles.Any (p => p.transform.position.x == x & p.transform.position.z == z)) {
 			GameObject p = GameObject.CreatePrimitive (PrimitiveType.Plane);
 			p.transform.position = new Vector3 (x, .01f, z);
-			p.renderer.material = PlaneHelper.planeHelper.HighlightedMaterial;
+			if (Grid.enemyPlayer.transform.position.x == x && Grid.enemyPlayer.transform.position.z == z) {
+				p.renderer.material = PlaneHelper.planeHelper.EnemyHighlightedMaterial;
+				p.AddComponent("EnemyHighlightedTileHelper");
+			} else {
+				p.renderer.material = PlaneHelper.planeHelper.HighlightedMaterial;
+				p.AddComponent("HighlightedTileHelper");
+			}
 			p.renderer.transform.localScale = new Vector3 (.1f, .1f, .1f);
-			p.AddComponent("HighlightedTileHelper");
 
 			Grid.HighlightedTiles.Add(p);
 		}

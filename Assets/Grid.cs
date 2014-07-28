@@ -43,11 +43,19 @@ public class Grid : MonoBehaviour {
 		myScript = (PlaneHelper)MyGrid [8, 8].GetComponent ("PlaneHelper");
 		myScript.isRockyTerrain = true;
 
+		// me
 		staticPlayer = GameObject.CreatePrimitive(PrimitiveType.Cube);
 
 		staticPlayer.transform.position = new Vector3 (3, 0, 3);
 		staticPlayer.renderer.material.color = Color.black;
 		staticPlayer.AddComponent ("Player");
+
+		// enemy
+		enemyPlayer = GameObject.CreatePrimitive (PrimitiveType.Capsule);
+
+		enemyPlayer.transform.position = new Vector3 (7, 0, 7);
+		enemyPlayer.renderer.material.color = Color.magenta;
+		enemyPlayer.transform.localScale = new Vector3 (.5f, .5f, .5f);
 	}
 
 	void OnGUI()
@@ -76,6 +84,34 @@ public class Grid : MonoBehaviour {
 				PlaneHelper.ClearPreviousSelection();
 				PlaneHelper.ShowPossibleMoves((int)playerPosition.x, (int)playerPosition.z, Player.GetMaxMoves());
 			}
+		}
+
+		GUI.Label (new Rect (750, 20, 100, 20), new GUIContent ("Turn: " + (TurnController.IsPlayersTurn () ? "player" : "computer")));
+	}
+
+	void Update() {
+		if (Grid.enemyPlayer.activeSelf && !TurnController.IsPlayersTurn ()) {
+			// Move enemy towards player. Can move one space.
+			var enemyPos = enemyPlayer.transform.position;
+			var playerPos = staticPlayer.transform.position;
+			if (Mathf.Abs(enemyPos.x - playerPos.x) >= Mathf.Abs(enemyPos.z - playerPos.z)) { // move x
+				if (enemyPos.x > playerPos.x) { // move left
+					enemyPlayer.transform.position = new Vector3(enemyPos.x - 1, enemyPos.y, enemyPos.z);
+				}
+				else { // move right
+					enemyPlayer.transform.position = new Vector3(enemyPos.x + 1, enemyPos.y, enemyPos.z);
+				}
+			}
+			else { // move y
+				if (enemyPos.z > playerPos.z) { // move down
+					enemyPlayer.transform.position = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z - 1);
+				}
+				else { // move up
+					enemyPlayer.transform.position = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z + 1);
+				}
+			}
+
+			TurnController.ChangeTurn();
 		}
 	}
 }

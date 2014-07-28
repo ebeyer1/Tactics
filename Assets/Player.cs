@@ -30,14 +30,16 @@ public class Player : MonoBehaviour {
 	}
 
 	void OnMouseDown() {
-		var currPosition = gameObject.transform.position;
+		if (TurnController.IsPlayersTurn ()) {
+			var currPosition = gameObject.transform.position;
 
-		if (_isSelected) {
-			PlaneHelper.ClearPreviousSelection ();
-			_isSelected = false;
-		} else {
-			PlaneHelper.ShowPossibleMoves((int)currPosition.x, (int)currPosition.z, _maxMoves);
-			_isSelected = true;
+			if (_isSelected) {
+				PlaneHelper.ClearPreviousSelection ();
+				_isSelected = false;
+			} else {
+				PlaneHelper.ShowPossibleMoves ((int)currPosition.x, (int)currPosition.z, _maxMoves);
+				_isSelected = true;
+			}
 		}
 	}
 }
