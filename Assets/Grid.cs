@@ -92,30 +92,47 @@ public class Grid : MonoBehaviour {
 
 	void Update() {
 		if (Grid.enemyPlayer.activeSelf && !TurnController.IsPlayersTurn () && compCanPlay) {
+			PlaneHelper.ShowPossibleMoves((int)Grid.enemyPlayer.transform.position.x,
+			                              (int)Grid.enemyPlayer.transform.position.z,
+			                              1,
+			                              true);
 			compCanPlay = false;
 			// Move enemy towards player. Can move one space.
 			var enemyPos = enemyPlayer.transform.position;
 			var playerPos = staticPlayer.transform.position;
 			Vector3 target;
-			if (Mathf.Abs(enemyPos.x - playerPos.x) >= Mathf.Abs(enemyPos.z - playerPos.z)) { // move x
-				if (enemyPos.x > playerPos.x) { // move left
-					target = new Vector3(enemyPos.x - 1, enemyPos.y, enemyPos.z);
-				}
-				else { // move right
-					target = new Vector3(enemyPos.x + 1, enemyPos.y, enemyPos.z);
-				}
+
+			// enemy can move left
+			if (Mathf.Abs(enemyPos.x - playerPos.x) >= Mathf.Abs(enemyPos.z - playerPos.z) &&
+			    enemyPos.x > playerPos.x &&
+			    CanMoveHere((int)enemyPos.x-1, (int)enemyPos.z))
+			{
+				target = new Vector3(enemyPos.x - 1, enemyPos.y, enemyPos.z);
 			}
-			else { // move y
-				if (enemyPos.z > playerPos.z) { // move down
-					target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z - 1);
-				}
-				else { // move up
-					target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z + 1);
-				}
+			// enemy can move right
+			else if (Mathf.Abs(enemyPos.x - playerPos.x) >= Mathf.Abs(enemyPos.z - playerPos.z) &&
+			    	 enemyPos.x > playerPos.x &&
+			    	 CanMoveHere((int)enemyPos.x+1, (int)enemyPos.z))
+			{
+				target = new Vector3(enemyPos.x + 1, enemyPos.y, enemyPos.z);
+			}
+			// enemy can move down
+			else if (enemyPos.z > playerPos.z &&
+			         CanMoveHere((int)enemyPos.x, (int)enemyPos.z - 1))
+			{
+				target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z - 1);
+			}
+			// enemy moves up
+			else {
+				target = new Vector3(enemyPos.x, enemyPos.y, enemyPos.z + 1);
 			}
 
 			StartCoroutine(MoveObj(enemyPlayer, target, 1.0f));
 		}
+	}
+
+	private static bool CanMoveHere(int x, int z) {
+		return !((PlaneHelper)Grid.MyGrid [x, z].GetComponent ("PlaneHelper")).isRockyTerrain;
 	}
 
 	public static IEnumerator MoveObj(GameObject gameObj, Vector3 target, float time) {
@@ -128,7 +145,8 @@ public class Grid : MonoBehaviour {
 			gameObj.transform.position = Vector3.Lerp(startPos, target, i);
 			yield return null;
 		}
-		
+
+		PlaneHelper.ClearPreviousSelection();
 		compCanPlay = true;
 		TurnController.ChangeTurn ();
 	}

@@ -10,7 +10,5 @@ public class EnemyHighlightedTileHelper : MonoBehaviour {
 		Player.player.MoveToCoord (clickedX, clickedZ);
 
 		Grid.enemyPlayer.SetActive (false);
-
-		PlaneHelper.ClearPreviousSelection();
 	}
 }

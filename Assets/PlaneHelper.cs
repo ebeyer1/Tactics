@@ -21,7 +21,7 @@ public class PlaneHelper : MonoBehaviour {
 		Grid.HighlightedTiles.Clear ();
 	}
 
-	public static void ShowPossibleMoves(int x, int z, int dim) {
+	public static void ShowPossibleMoves(int x, int z, int dim, bool isEnemy = false) {
 		int required = 0;
 		var scrpt = (PlaneHelper)Grid.MyGrid [x, z].GetComponent ("PlaneHelper");
 		if (scrpt.isRockyTerrain && dim != Player.GetMaxMoves()) {
@@ -35,7 +35,7 @@ public class PlaneHelper : MonoBehaviour {
 		if (!Grid.HighlightedTiles.Any (p => p.transform.position.x == x & p.transform.position.z == z)) {
 			GameObject p = GameObject.CreatePrimitive (PrimitiveType.Plane);
 			p.transform.position = new Vector3 (x, .01f, z);
-			if (Grid.enemyPlayer.transform.position.x == x && Grid.enemyPlayer.transform.position.z == z) {
+			if (Grid.enemyPlayer.transform.position.x == x && Grid.enemyPlayer.transform.position.z == z && !isEnemy) {
 				p.renderer.material = PlaneHelper.planeHelper.EnemyHighlightedMaterial;
 				p.AddComponent("EnemyHighlightedTileHelper");
 			} else {
