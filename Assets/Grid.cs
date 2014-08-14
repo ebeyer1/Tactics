@@ -59,6 +59,7 @@ public class Grid : MonoBehaviour {
 		enemyPlayer.transform.localScale = new Vector3 (.5f, .5f, .5f);
 	}
 
+	private List<GameObject> cards = new List<GameObject> ();
 	void OnGUI()
 	{
 		GUI.Label (new Rect (110, 20, 100, 20), new GUIContent ("Max moves: " + Player.GetMaxMoves ()));
@@ -85,6 +86,24 @@ public class Grid : MonoBehaviour {
 				PlaneHelper.ClearPreviousSelection();
 				PlaneHelper.ShowPossibleMoves((int)playerPosition.x, (int)playerPosition.z, Player.GetMaxMoves());
 			}
+		}
+
+		if (GUI.Button(new Rect(100,140,100,50), new GUIContent("Add card"))) {
+			var count = cards.Count;
+			var go = GameObject.CreatePrimitive(PrimitiveType.Plane);
+			go.transform.localScale = new Vector3(.1f,.1f,.1f);
+			var column = ((int)(count / (Height-1)));
+			var xSpot = 10.1f + (column * 1.1f); // startingColumnSpot + (column * columnSpacing);
+			var row = (count % (Height-1));
+			var zSpot = row*1.1f; // row * rowSpacing
+			go.transform.position = new Vector3(xSpot,.1f,zSpot);
+
+			// add a script component
+			// script will have random abilities.
+			// will also handle the onclick event which grants abilities.
+			// on card hover will zoom object
+
+			cards.Add(go);
 		}
 
 		GUI.Label (new Rect (750, 20, 100, 20), new GUIContent ("Turn: " + (TurnController.IsPlayersTurn () ? "player" : "computer")));
