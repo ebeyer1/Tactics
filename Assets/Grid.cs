@@ -23,25 +23,25 @@ public class Grid : MonoBehaviour {
 				                                           gridPlane.transform.position.z + z);
 
 
-				gridPlane.renderer.material = PlaneHelper.planeHelper.DefaultMaterial;
+				gridPlane.GetComponent<Renderer>().material = PlaneHelper.planeHelper.DefaultMaterial;
 
 				MyGrid[x,z] = gridPlane;
 			}
 		}
 
-		MyGrid [2, 2].renderer.material = PlaneHelper.planeHelper.RockyTerrainMaterial;
+		MyGrid [2, 2].GetComponent<Renderer>().material = PlaneHelper.planeHelper.RockyTerrainMaterial;
 		var myScript = (PlaneHelper)MyGrid [2, 2].GetComponent ("PlaneHelper");
 		myScript.isRockyTerrain = true;
 
-		MyGrid [4, 4].renderer.material = PlaneHelper.planeHelper.RockyTerrainMaterial;
+		MyGrid [4, 4].GetComponent<Renderer>().material = PlaneHelper.planeHelper.RockyTerrainMaterial;
 		myScript = (PlaneHelper)MyGrid [4, 4].GetComponent ("PlaneHelper");
 		myScript.isRockyTerrain = true;
 
-		MyGrid [6, 6].renderer.material = PlaneHelper.planeHelper.RockyTerrainMaterial;
+		MyGrid [6, 6].GetComponent<Renderer>().material = PlaneHelper.planeHelper.RockyTerrainMaterial;
 		myScript = (PlaneHelper)MyGrid [6, 6].GetComponent ("PlaneHelper");
 		myScript.isRockyTerrain = true;
 
-		MyGrid [8, 8].renderer.material = PlaneHelper.planeHelper.RockyTerrainMaterial;
+		MyGrid [8, 8].GetComponent<Renderer>().material = PlaneHelper.planeHelper.RockyTerrainMaterial;
 		myScript = (PlaneHelper)MyGrid [8, 8].GetComponent ("PlaneHelper");
 		myScript.isRockyTerrain = true;
 
@@ -49,13 +49,13 @@ public class Grid : MonoBehaviour {
 		Object prefab = Resources.Load("space-wizard");
 		staticPlayer = (GameObject) Instantiate(prefab, new Vector3(3, 0, 3), Quaternion.identity);
 		staticPlayer.AddComponent<BoxCollider> ();
-		staticPlayer.AddComponent ("Player");
+		staticPlayer.AddComponent <Player>();
 
 		// enemy
 		enemyPlayer = GameObject.CreatePrimitive (PrimitiveType.Capsule);
 
 		enemyPlayer.transform.position = new Vector3 (7, 0, 7);
-		enemyPlayer.renderer.material.color = Color.magenta;
+		enemyPlayer.GetComponent<Renderer>().material.color = Color.magenta;
 		enemyPlayer.transform.localScale = new Vector3 (.5f, .5f, .5f);
 	}
 

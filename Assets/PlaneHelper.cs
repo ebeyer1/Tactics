@@ -36,13 +36,13 @@ public class PlaneHelper : MonoBehaviour {
 			GameObject p = GameObject.CreatePrimitive (PrimitiveType.Plane);
 			p.transform.position = new Vector3 (x, .01f, z);
 			if (Grid.enemyPlayer.transform.position.x == x && Grid.enemyPlayer.transform.position.z == z && !isEnemy) {
-				p.renderer.material = PlaneHelper.planeHelper.EnemyHighlightedMaterial;
-				p.AddComponent("EnemyHighlightedTileHelper");
+				p.GetComponent<Renderer>().material = PlaneHelper.planeHelper.EnemyHighlightedMaterial;
+				p.AddComponent<EnemyHighlightedTileHelper>();
 			} else {
-				p.renderer.material = PlaneHelper.planeHelper.HighlightedMaterial;
-				p.AddComponent("HighlightedTileHelper");
+				p.GetComponent<Renderer>().material = PlaneHelper.planeHelper.HighlightedMaterial;
+				p.AddComponent<HighlightedTileHelper>();
 			}
-			p.renderer.transform.localScale = new Vector3 (.1f, .1f, .1f);
+			p.GetComponent<Renderer>().transform.localScale = new Vector3 (.1f, .1f, .1f);
 
 			Grid.HighlightedTiles.Add(p);
 		}
